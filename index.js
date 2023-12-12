@@ -19,14 +19,34 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get('/api/:date', (req, res) => {
+  const inputDate = req.params.date;
+  let timestamp;
+  let date;
+
+  if (!isNaN(inputDate)) {
+    timestamp = parseInt(inputDate, 10);
+    date = new Date(timestamp);
+  } else {
+    date = new Date(inputDate);
+    timestamp = date.getTime();
+  }
+
+  if (isNaN(timestamp) || isNaN(date.getTime())) {
+    return res.json({ error: 'Invalid Date' });
+  }
+
+  const response = {
+    unix: timestamp,
+    utc: date.toUTCString(),
+  };
+
+  res.json(response);
 });
 
 
-
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
