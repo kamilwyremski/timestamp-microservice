@@ -19,12 +19,15 @@ app.get("/", function (req, res) {
 });
 
 
-app.get('/api/:date', (req, res) => {
+app.get('/api/:date?', (req, res) => {
   const inputDate = req.params.date;
   let timestamp;
   let date;
 
-  if (!isNaN(inputDate)) {
+  if (!inputDate) {
+    timestamp = Date.now();
+    date = new Date(timestamp);
+  } else if (!isNaN(inputDate)) {
     timestamp = parseInt(inputDate, 10);
     date = new Date(timestamp);
   } else {
